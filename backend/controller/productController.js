@@ -1,6 +1,12 @@
 import Product from '../models/productModel.js';
 import HandleError from '../utils/handleError.js';
 import handleAsyncError from '../middleware/handleAsyncError.js';
+import APIFuntionality from '../utils/apiFunctionality.js';
+
+
+//http://localhost:8000/api/v1/product/
+// 687dddd4c9179ce303ad37b7?keyword=laptop
+
 
 // Creating Products
 export const createProducts = handleAsyncError(async (req,res,next)=>{
@@ -14,7 +20,10 @@ export const createProducts = handleAsyncError(async (req,res,next)=>{
 
 // Get all products
 export const getAllProducts = handleAsyncError(async (req,res,next) => {
-    const products= await Product.find();
+    
+    const apiFuntionality = new APIFuntionality(Product.find(), req.query).search();
+    
+    const products= await apiFuntionality.query;
     res.status(200).json({
         success:true,
         products
