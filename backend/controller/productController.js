@@ -21,13 +21,37 @@ export const createProducts = handleAsyncError(async (req,res,next)=>{
 // Get all products
 export const getAllProducts = handleAsyncError(async (req,res,next) => {
     
-    const apiFuntionality = new APIFuntionality(Product.find(), req.query)
+    const resultPerPage = 3;
+    const apiFeatures = new APIFuntionality(Product.find(), req.query)
     .search().filter();
+
+    // Getting filtered query before pagination
+    const filteredQuery = apiFeatures.query.clone();
+    const productCount = await filteredQuery.countDocuments();
     
-    const products= await apiFuntionality.query;
+    //Calculate total pages based on filtered count
+    const totalPages = Math.ceil(productCount/resultPerPage);
+    const page = Number(req.query.page) || 1;
+    if(page > totalPages && productCount>0) {
+        return next(new HandleError("This page doesn't exist", 404));
+    }
+
+
+    //Apply pagination
+    apiFeatures.pagination(resultPerPage);
+    
+    const products= await apiFeatures.query;
+
+    if(!products || products.length === 0) {
+        return next(new HandleError("No Product Found",404));
+    }
     res.status(200).json({
         success:true,
-        products
+        products,
+        productCount,
+        resultPerPage,
+        totalPages,
+        currentPage: page,
     })
 }); 
 
