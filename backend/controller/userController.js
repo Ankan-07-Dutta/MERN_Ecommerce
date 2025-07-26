@@ -1,3 +1,4 @@
+import { now } from "mongoose";
 import handleAsyncError from "../middleware/handleAsyncError.js";
 import User from "../models/userModel.js";
 import HandleError from "../utils/handleError.js";
@@ -38,4 +39,17 @@ export const loginUser = handleAsyncError( async(req,res,next)=> {
     }
 
     sendToken(user,200,res);
+})
+
+//Logout
+export const logoutUser = handleAsyncError( async (req,res,next)=>{
+    
+    res.cookie('token',null,{
+        expires:new Date(Date.now()),
+        httpOnly: true,
+    })
+    res.status(200).json({
+        success:true,
+        message: "Successfully Logged out"
+    })
 })
