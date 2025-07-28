@@ -213,6 +213,7 @@ export const updateUserRole = handleAsyncError( async(req,res ,next)=>{
     })
 })
 
+
 // Admin delete user profile
 export const deleteUser = handleAsyncError( async(req,res ,next)=>{
     
