@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import Navbar from '../components/Navbar';
 import ImageSlider from '../components/ImageSlider';
 import Product from '../components/Product';
+import PageTitle from '../components/PageTitle';
 const products = [
   {
             "_id": "687dde7dc9179ce303ad37c3",
@@ -51,6 +52,7 @@ const products = [
 const Home = () => {
   return (
     <>
+        <PageTitle title="Home-My Website" />
         <Navbar />
         <ImageSlider />
         <div className='home-container'>
