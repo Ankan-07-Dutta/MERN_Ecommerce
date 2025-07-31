@@ -10,7 +10,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = ()=> setIsMenuOpen(!isMenuOpen);
-  const isAuthenticated = true;
+  const isAuthenticated = false;
   return (
     <nav className="navbar">
       <div className="navbar-container">
