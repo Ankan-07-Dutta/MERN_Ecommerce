@@ -28,7 +28,7 @@ const Products = () => {
 
     useEffect(()=> {
         dispatch(getProduct({keyword, page:currentPage, category}))
-    },[dispatch, keyword, currentPage]);
+    },[dispatch, keyword, currentPage, category]);
 
     useEffect( ()=> {
         if(error){
@@ -50,6 +50,13 @@ const Products = () => {
         }
       }
 
+      const handleCategoryClick = (category)=> {
+        const newSearchParams = new URLSearchParams(location.search);
+        newSearchParams.set('category', category); 
+        newSearchParams.delete('page'); 
+        navigate(`?${newSearchParams.toString()}`)     
+      }
+
   return (
     <>
     { loading ? (<Loader />) :(<>
@@ -63,9 +70,10 @@ const Products = () => {
                 {/* Render Categories */}
                 <ul>
                     {
-                        categories.pushmap((category)=> {
+                        categories.map((category)=> {
                             return (
-                               <li key={category}>{category}</li> 
+                               <li key={category}
+                               onClick={()=> handleCategoryClick(category)}>{category}</li> 
                             )
                         })
                     }
