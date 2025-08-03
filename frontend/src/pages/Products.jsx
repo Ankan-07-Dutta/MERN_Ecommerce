@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../pageStyles/Products.css';
 import PageTitle from '../components/PageTitle';
 import Navbar from '../components/Navbar';
@@ -7,24 +7,28 @@ import { useDispatch, useSelector } from 'react-redux';
 import Product from '../components/Product';
 import { getProduct, removeErrors } from '../features/products/productSlice';
 import Loader from '../components/Loader';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import NoProducts from '../components/NoProducts';
+import Pagination from '../components/Pagination';
 
 
 const Products = () => {
-    const {loading, error, products} = useSelector( state => state.product);
+    const {loading, error, products, resultsPerPage, productCount} = useSelector( state => state.product);
 
     const dispatch = useDispatch();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const keyword = searchParams.get("keyword")  
-    console.log(keyword);
-      
+    const keyword = searchParams.get("keyword");  
+    const category = searchParams.get("category");  
+    const pageFromURL = parseInt(searchParams.get("page"),10) || 1;
+    const [currentPage, setCurrentPage] = useState(pageFromURL);  
+    const navigate = useNavigate();
+    const categories = ["laptop", "mobile", "tv", "fruits", "glass"];
 
     useEffect(()=> {
-        dispatch(getProduct({keyword}))
-    },[dispatch, keyword]);
+        dispatch(getProduct({keyword, page:currentPage, category}))
+    },[dispatch, keyword, currentPage]);
 
     useEffect( ()=> {
         if(error){
@@ -32,6 +36,19 @@ const Products = () => {
           dispatch(removeErrors());
         }
       }, [dispatch, error]);
+
+      const handlePageChange=(page)=> {
+        if(page !== currentPage){
+            setCurrentPage(page);
+            const newSearchParams = new URLSearchParams(location.search);
+            if(page === 1){
+                newSearchParams.delete('page');
+            } else {
+                newSearchParams.set('page', page);
+            }
+            navigate(`?${newSearchParams.toString()}`)
+        }
+      }
 
   return (
     <>
@@ -44,6 +61,15 @@ const Products = () => {
                     CATEGORIES
                 </h3>
                 {/* Render Categories */}
+                <ul>
+                    {
+                        categories.pushmap((category)=> {
+                            return (
+                               <li key={category}>{category}</li> 
+                            )
+                        })
+                    }
+                </ul>
             </div>
             <div className="products-section">
                {products.length >0? (<div className="products-product-container">
@@ -55,6 +81,9 @@ const Products = () => {
                 </div>) : (
                     <NoProducts keyword={keyword} />
                 )}
+                <Pagination 
+                currentPage={currentPage}
+                onPageChange={handlePageChange}/>
             </div>
         </div>
         <Footer />
