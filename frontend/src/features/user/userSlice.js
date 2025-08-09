@@ -9,8 +9,26 @@ export const register = createAsyncThunk('user/register',async(userData, {reject
                 'Content-Type':'multipart/form-data'
             }
         }
-        const {data} = await axios.post('.api/v1/register', userData, config);
+        const {data} = await axios.post('/api/v1/register', userData, config);
         console.log('Registration data');
+        return data;
+        
+   
+    } catch (error) {
+        return rejectWithValue(error.response?.data || 'Registration failed. Please try again later');
+
+    }
+})
+
+export const login = createAsyncThunk('user/login',async({email, password}, {rejectWithValue})=> {
+    try {
+        const config = {
+            headers:{
+                'Content-Type':'application/json'
+            }
+        }
+        const {data} = await axios.post('/api/v1/login', {email, password}, config);
+        console.log('Login data', data);
         return data;
         
    
@@ -40,6 +58,7 @@ const userSlice = createSlice({
         }
     },
     extraReducers:(builder)=> {
+        //Registration cases
         builder.addCase(register.pending, (state)=> {
             state.loading = true;
             state.error = null;
@@ -52,6 +71,28 @@ const userSlice = createSlice({
             state.isAuthenticated = Boolean(action.payload?.user);
         })
         .addCase(register.rejected, (state, action)=> {
+            state.loading = false;
+            state.error = action.payload?.message || 'Registration failed. Please try again later';
+            state.user = null;
+            state.isAuthenticated = false;
+        })
+
+
+        //Login Cases
+        builder.addCase(login.pending, (state)=> {
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(login.fulfilled, (state, action)=> {
+            state.loading = false;
+            state.error = null;
+            state.success = action.payload.success;
+            state.user = action.payload?.user || null ;
+            state.isAuthenticated = Boolean(action.payload?.user);
+            console.log(state.user);
+            
+        })
+        .addCase(login.rejected, (state, action)=> {
             state.loading = false;
             state.error = action.payload?.message || 'Registration failed. Please try again later';
             state.user = null;
