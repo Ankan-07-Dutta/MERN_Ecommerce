@@ -34,7 +34,7 @@ const UpdateProfile = () => {
     }
 
     const updateSubmit = (e)=> {
-        e.preventDefault;
+        e.preventDefault();
         const myForm = new FormData();
         myForm.set("name", name)
         myForm.set("email", email)
