@@ -14,16 +14,19 @@ import UpdateProfile from './User/UpdateProfile';
 import UpdatePassword from './User/UpdatePassword';
 import ForgotPassword from './User/ForgotPassword';
 import ResetPassword from './User/ResetPassword';
+import Cart from './Cart/Cart';
 
 const App = () => {
   const {isAuthenticated, user} = useSelector(state => state.user);
   const dispatch = useDispatch();
+
   useEffect(()=> {
     if(isAuthenticated){
       dispatch(loadUser())
     }
+    
   },[dispatch]);
-  console.log(isAuthenticated, user);
+  //console.log(isAuthenticated, user);
   
   return (
     <Router>
@@ -39,6 +42,7 @@ const App = () => {
         <Route path='/password/update' element={<ProtectedRoute element={<UpdatePassword />} />} />
         <Route path='/password/forgot' element={<ForgotPassword />}/>
         <Route path='/reset/:token' element={<ResetPassword />}/>
+        <Route path='/cart' element={<Cart />}/>
 
       </Routes>
       {
