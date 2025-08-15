@@ -13,8 +13,8 @@ const Cart = () => {
     console.log(cartItems);
     const subTotal = cartItems.reduce( (acc, item)=> acc + item.price * item.quantity,0 )
     const tax = Math.ceil(subTotal* 0.18);
-    const shipping = subTotal> 499 ? 0 : 50;
-    const total = subTotal + tax + shipping;
+    const shippingCharges = subTotal> 499 ? 0 : 50;
+    const total = subTotal + tax + shippingCharges;
     const navigate = useNavigate();
 
     const checkoutHandler  = ()=> {
@@ -68,7 +68,7 @@ const Cart = () => {
                     </div>
                     <div className="summary-item">
                         <p className="summary-label">Shipping :</p>
-                        <p className="summary-value">{shipping}/-</p>
+                        <p className="summary-value">{shippingCharges}/-</p>
                     </div>
                     <div className="summary-total">
                         <p className="total-label">Total :</p>
