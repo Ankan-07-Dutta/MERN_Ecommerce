@@ -33,7 +33,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-logo">
-          <Link to="/" onClick={ ()=> setIsMenuOpen(false) }> ShopEasy </Link>
+          <Link to="/" onClick={ ()=> setIsMenuOpen(false) }> Urban Trove </Link>
         </div>
 
         <div className={`navbar-links ${isMenuOpen ? 'active': '' }`}>
