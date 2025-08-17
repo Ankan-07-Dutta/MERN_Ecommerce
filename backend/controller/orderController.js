@@ -90,6 +90,8 @@ export const updateOrderStatus = handleAsyncError( async(req, res, next)=>{
     })
 })
 
+
+//Update order quantity
 async function updateQuantity(id,quantity){
     const product = await Product.findById(id);
     if(!product){
