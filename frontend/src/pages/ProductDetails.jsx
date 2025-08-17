@@ -6,19 +6,20 @@ import Footer from '../components/Footer';
 import Rating from '../components/Rating';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getProductDetails, removeErrors } from '../features/products/productSlice';
+import { createReview, getProductDetails, removeErrors, removeSuccess } from '../features/products/productSlice';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
 import { addItemsToCart, removeMessage } from '../features/cart/cartSlice';
 
 const ProductDetails = () => {
      const [userRating, setUserRating] = useState(0);
+     const [comment, setComment] = useState("");
      const [quantity, setQuantity] = useState(1);
         const handleRatingChange = (newRating)=> {
             setUserRating(newRating);            
         }
 
-        const {loading, error, product} = useSelector( (state)=> state.product );
+        const {loading, error, product, reviewSuccess, reviewLoading} = useSelector( (state)=> state.product );
         const {loading:cartLoading, error: cartError,success, message, cartItems} = useSelector( (state)=> state.cart );
         console.log(cartItems);
         
@@ -51,25 +52,6 @@ const ProductDetails = () => {
             }
           }, [dispatch, success, message]);
         
-          if(loading){
-            return (
-                <>
-                    <Navbar />
-                    <Loader />
-                    <Footer />
-                </>
-            )
-          }
-
-          if(!product){            
-            return (
-                <>
-                    <PageTitle title="Product Details" />
-                    <Navbar /> 
-                    <Footer />
-                </>
-            );
-          }
 
           const decreaseQuantity=()=>{
             if(quantity <=1){
@@ -93,6 +75,51 @@ const ProductDetails = () => {
 
           const addToCart= ()=> {
             dispatch(addItemsToCart({id, quantity}))
+          }
+
+
+          const handleReviewSubmit= (e)=> {
+            e.preventDefault();
+            if(!userRating){
+                toast.error('Please Select a rating',{position:'top-center', autoClose:3000 });
+                return;
+            }
+            dispatch(createReview({
+                rating: userRating,
+                comment,
+                productId:id
+            }))
+          }
+
+          useEffect(()=> {
+            if(reviewSuccess){
+                toast.success('Review Submitted Successfully',{position:'top-center', autoClose:3000 });
+                setUserRating(0);
+                setComment("");
+                dispatch(removeSuccess());
+                dispatch(getProductDetails(id))
+
+            }
+          },[reviewSuccess,id,dispatch])
+
+          if(loading){
+            return (
+                <>
+                    <Navbar />
+                    <Loader />
+                    <Footer />
+                </>
+            )
+          }
+
+          if(!product){            
+            return (
+                <>
+                    <PageTitle title="Product Details" />
+                    <Navbar /> 
+                    <Footer />
+                </>
+            );
           }
 
   return (
@@ -146,7 +173,7 @@ const ProductDetails = () => {
                         </>)
                     }
 
-                    <form className="review-form">
+                    <form className="review-form" onSubmit={handleReviewSubmit}>
                         <h3>Write a Review</h3>
                         <Rating 
                         value={0}
@@ -154,10 +181,13 @@ const ProductDetails = () => {
                         onRatingChange={handleRatingChange}/>
                         <textarea
                         placeholder='Write your review here...'
-                        className='review-input'></textarea>
+                        className='review-input' value={comment}
+                        onChange={(e)=> setComment(e.target.value)}
+                        required></textarea>
 
-                        <button className="submit-review-btn">
-                            Submit Review
+                        <button className="submit-review-btn"
+                        disabled={reviewLoading}>
+                            {reviewLoading? 'Submitting....': 'Submit Review'}
                         </button>
                     </form>
                 </div>
