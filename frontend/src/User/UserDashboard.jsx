@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { logout, removeSuccess } from '../features/user/userSlice';
+import { clearCart } from '../features/cart/cartSlice';
 
 const UserDashboard = ({user}) => {
     const {cartItems} = useSelector(state => state.cart)
