@@ -3,8 +3,14 @@ import '../AdminStyles/CreateProduct.css'
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageTitle from '../components/PageTitle';
+import { useDispatch, useSelector } from 'react-redux';
+import { createProduct, removeErrors, removeSuccess } from '../features/admin/adminSlice';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify'
 
 const CreateProduct = () => {
+    const {success, loading,error} = useSelector(state => state.admin);
+    const dispatch = useDispatch();
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
@@ -13,7 +19,7 @@ const CreateProduct = () => {
     const [image, setImage] = useState([]);
     const [imagePreview, setImagePreview] = useState([]);
 
-    const categories = ['glass', 'shirt', 'mobile', 'dress', 'tv'];
+    const categories = ['glass', 'shirt', 'mobile', 'dress', 'tv','pant'];
 
     const createProductSubmit= (e)=> {
         e.preventDefault();
@@ -26,6 +32,7 @@ const CreateProduct = () => {
         image.forEach((img)=>{
             myForm.append('image',img)
         })
+        dispatch(createProduct(myForm))
     }
 
     const createProductImage=(e)=>{
@@ -46,6 +53,27 @@ const CreateProduct = () => {
         })
         
     }
+
+    useEffect(()=>{
+        if(error){
+            toast.error(error, {position:'top-center', autoClose:3000});
+            dispatch(removeErrors());
+        }
+        if(success){
+            toast.success("Product Created Successfully", {position:'top-center', autoClose:3000});
+            dispatch(removeSuccess());
+            setName("");
+            setPrice("");
+            setDescription("");
+            setCategory("");
+            setStock("");
+            setImage([]);
+            setImagePreview([]);
+        }
+    },[dispatch,error,success])
+
+
+
     return (
         <>
             <Navbar />
@@ -119,7 +147,7 @@ const CreateProduct = () => {
                             key={index} />
                         ))}
                     </div>
-                    <button className="submit-btn">Create</button>
+                    <button className="submit-btn">{loading ?'Creating Product....': "Create" }</button>
 
                 </form>
             </div>
