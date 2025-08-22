@@ -50,8 +50,7 @@ export const updateProduct = createAsyncThunk('admin/updateProduct', async({id,f
 })
 
 
-
-//Update products
+//Delete products
 export const deleteProduct = createAsyncThunk('admin/deleteProduct', async(productId,{rejectWithValue})=> {
     try {
        const {data} = await axios.delete(`/api/v1/admin/product/${productId}`);
@@ -59,6 +58,32 @@ export const deleteProduct = createAsyncThunk('admin/deleteProduct', async(produ
         
     } catch (error) {
         return rejectWithValue(error.response?.data || "Product Deletion Failed");
+
+    }
+})
+
+
+
+//Fetch all users
+export const fetchUsers = createAsyncThunk('admin/fetchUsers', async(_,{rejectWithValue})=> {
+    try {
+       const {data} = await axios.get('/api/v1/admin/users');
+       return data;
+        
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Failed to fetch users");
+
+    }
+})
+
+//Get single user
+export const getSingleUser = createAsyncThunk('admin/getSingleUser', async(id,{rejectWithValue})=> {
+    try {
+       const {data} = await axios.get(`/api/v1/admin/user/${id}`);
+       return data;
+        
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Failed to fetch user");
 
     }
 })
@@ -72,6 +97,8 @@ const adminSlice = createSlice({
         error:null,
         product:{},
         deleting : {},
+        users:[],
+        user:{}
     },
     reducers:{
         removeErrors:(state)=> {
@@ -151,6 +178,38 @@ const adminSlice = createSlice({
             const productId = action.meta.arg;
             state.deleting[productId] = false;
             state.error = action.payload?.message || 'Product Deletion Failed';
+        })
+
+
+        // Fetch All Users Cases
+        builder
+        .addCase(fetchUsers.pending, (state)=>{
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(fetchUsers.fulfilled, (state, action)=>{
+            state.loading= false;
+            state.users = action.payload.users;
+        })
+        .addCase(fetchUsers.rejected, (state,action)=>{
+            state.loading = false
+            state.error = action.payload?.message || "Failed to fetch users";
+        })
+
+
+        // Fetch All Users Cases
+        builder
+        .addCase(getSingleUser.pending, (state)=>{
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(getSingleUser.fulfilled, (state, action)=>{
+            state.loading= false;
+            state.user = action.payload.user;
+        })
+        .addCase(getSingleUser.rejected, (state,action)=>{
+            state.loading = false
+            state.error = action.payload?.message || "Failed to fetch user";
         })
     }
 })
