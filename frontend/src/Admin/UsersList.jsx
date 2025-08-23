@@ -5,26 +5,41 @@ import PageTitle from '../components/PageTitle';
 import Footer from '../components/Footer';
 import Loader from '../components/Loader';
 import { Delete, Edit } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUsers, removeErrors } from '../features/admin/adminSlice';
+import { clearMessage, deleteUser, fetchUsers, removeErrors } from '../features/admin/adminSlice';
 import { toast } from 'react-toastify';
 
 const UsersList = () => {
-    const {users,loading,error} = useSelector(state => state.admin);
+    const {users,loading,error, message} = useSelector(state => state.admin);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     console.log(users);
     
     useEffect(()=> {
-        dispatch(fetchUsers())
+        dispatch(fetchUsers());
     },[dispatch])
 
-    useEffect( ()=> {
+    
+      const handleDelete= (userId)=>{
+        const confirm = window.confirm('Are you sure you want to delete this user ?');
+        if(confirm){
+            dispatch(deleteUser(userId));
+        }
+      }
+
+      useEffect( ()=> {
         if(error){
           toast.error(error , {position: 'top-center', autoClose: 3000}); 
           dispatch(removeErrors());
         }
-      }, [dispatch, error]);
+        if(message){
+            toast.success(message , {position: 'top-center', autoClose: 3000}); 
+            dispatch(clearMessage());
+            navigate('/admin/dashboard')
+        }
+      }, [dispatch, error, message]);
+
   return (
     <>
    { loading? (<Loader />):
@@ -59,7 +74,8 @@ const UsersList = () => {
                                     <Edit />
                                 </Link>
 
-                                <button className="action-icon delete-icon">
+                                <button className="action-icon delete-icon"
+                                onClick={()=> handleDelete(user._id)}>
                                     <Delete />
                                 </button>
                             </td>
