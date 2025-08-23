@@ -68,7 +68,7 @@ const OrderConfirm = () => {
                     {
                         cartItems.map((item)=>(
                             <tr key={item.product}>
-                                <td><img src={item.image} alt={item.name} className='product-image' /></td>
+                                <td><img src={item.image} alt={item.name} className='order-product-image' /></td>
                                 <td>{item.name}</td>
                                 <td>{item.price}/-</td>
                                 <td>{item.quantity}</td>

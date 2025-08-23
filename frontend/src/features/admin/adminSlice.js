@@ -112,6 +112,30 @@ export const deleteUser = createAsyncThunk('admin/deleteUser', async(userId,{rej
     }
 })
 
+//Fetch All Orders
+export const fetchAllOrders = createAsyncThunk('admin/fetchAllOrders', async(_,{rejectWithValue})=> {
+    try {
+       const {data} = await axios.get('/api/v1/admin/orders');
+       return data;
+        
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Failed to Fetch All Orders");
+
+    }
+})
+
+//Delete Order
+export const deleteOrder = createAsyncThunk('admin/deleteOrder', async(id,{rejectWithValue})=> {
+    try {
+       const {data} = await axios.delete(`/api/v1/admin/order/${id}`);
+       return data;
+        
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Failed to Delete Order");
+
+    }
+})
+
 const adminSlice = createSlice({
     name:'admin',
     initialState:{
@@ -123,7 +147,9 @@ const adminSlice = createSlice({
         deleting : {},
         users:[],
         user:{},
-        message:null
+        message:null,
+        orders:[],
+        totalAmount:0
     },
     reducers:{
         removeErrors:(state)=> {
@@ -271,6 +297,39 @@ const adminSlice = createSlice({
         .addCase(deleteUser.rejected, (state,action)=>{
             state.loading = false
             state.error = action.payload?.message || "Failed to Delete User";
+        })
+
+        // Fetch All Orders Cases
+        builder
+        .addCase(fetchAllOrders.pending, (state)=>{
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(fetchAllOrders.fulfilled, (state, action)=>{
+            state.loading= false;
+            state.orders = action.payload.orders;
+            state.totalAmount = action.payload.totalAmount;
+        })
+        .addCase(fetchAllOrders.rejected, (state,action)=>{
+            state.loading = false
+            state.error = action.payload?.message || "Failed to Fetch all Orders";
+        })
+
+
+        // Delete Order cases
+        builder
+        .addCase(deleteOrder.pending, (state)=>{
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(deleteOrder.fulfilled, (state, action)=>{
+            state.loading= false;
+            state.success = action.payload.success;
+            state.message = action.payload.message;
+        })
+        .addCase(deleteOrder.rejected, (state,action)=>{
+            state.loading = false
+            state.error = action.payload?.message || "Failed to Delete Order";
         })
     }
 })
