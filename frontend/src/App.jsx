@@ -29,6 +29,7 @@ import UsersList from './Admin/UsersList';
 import UpdateRole from './Admin/UpdateRole';
 import OrdersList from './Admin/OrdersList';
 import UpdateOrder from './Admin/UpdateOrder';
+import ReviewsList from './Admin/ReviewsList';
 
 const App = () => {
   const {isAuthenticated, user} = useSelector(state => state.user);
@@ -71,7 +72,8 @@ const App = () => {
         <Route path='/admin/users' element={<ProtectedRoute element={<UsersList />} adminOnly={true}/>} />
         <Route path='/admin/user/:userId' element={<ProtectedRoute element={<UpdateRole />} adminOnly={true}/>} />
         <Route path='/admin/orders' element={<ProtectedRoute element={<OrdersList />} adminOnly={true}/>} />
-        <Route path='/admin/order/:orderId' element={<UpdateOrder element={<OrdersList />} adminOnly={true}/>} />
+        <Route path='/admin/order/:orderId' element={<ProtectedRoute element={<UpdateOrder />} adminOnly={true}/>} />
+        <Route path='/admin/reviews' element={<ProtectedRoute element={<ReviewsList />} adminOnly={true}/>} />
 
 
       </Routes>
