@@ -237,7 +237,6 @@ const adminSlice = createSlice({
             state.loading= false;
             state.success = action.payload.success;
             state.products.push(action.payload.product);
-            console.log(state.products);
             
         })
         .addCase(createProduct.rejected, (state,action)=>{

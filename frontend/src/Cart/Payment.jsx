@@ -10,20 +10,20 @@ import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
 const Payment = () => {
-    const orderItem = JSON.parse(sessionStorage.getItem('orderItem'));
-    const { user } = useSelector(state => state.user);
-    const { shippingInfo } = useSelector(state => state.cart);
-    const navigate = useNavigate(); 
+  const orderItem = JSON.parse(sessionStorage.getItem('orderItem'));
+  const { user } = useSelector(state => state.user);
+  const { shippingInfo } = useSelector(state => state.cart);
+  const navigate = useNavigate();
 
 
 
-    const completePayment= async(amount)=> {
-      try{
+  const completePayment = async (amount) => {
+    try {
 
-      const { data: keyData} = await axios.get('/api/v1/getKey');
-      const {key} = keyData;
-      const { data: orderData} = await axios.post('/api/v1/payment/process',{amount});
-      const {order} = orderData;
+      const { data: keyData } = await axios.get('/api/v1/getKey');
+      const { key } = keyData;
+      const { data: orderData } = await axios.post('/api/v1/payment/process', { amount });
+      const { order } = orderData;
 
       // Open Razorpay Checkout
       const options = {
@@ -34,12 +34,12 @@ const Payment = () => {
         description: 'Ecommerce Website Payment Transaction',
         order_id: order.id,
         handler: async function (response) {
-          const {data} = await axios.post('/api/v1/paymentVerification',{
+          const { data } = await axios.post('/api/v1/paymentVerification', {
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_order_id: response.razorpay_order_id,
             razorpay_signature: response.razorpay_signature
           })
-          if(data.success){
+          if (data.success) {
             navigate(`/paymentSuccess?reference=${data.reference}`)
           } else {
             alert('Payment verification Failed')
@@ -57,26 +57,26 @@ const Payment = () => {
 
       const rzp = new Razorpay(options);
       rzp.open();
-    } catch(error){
-      toast.error(error.message , {position: 'top-center', autoClose: 3000}); 
-      
+    } catch (error) {
+      toast.error(error.message, { position: 'top-center', autoClose: 3000 });
+
     }
-      
-    }
+
+  }
 
   return (
     <>
-    <PageTitle title="Payment Processing" />
-    <Navbar />
-    <CheckoutPath activePath={2} />
-    <div className="payment-container">
+      <PageTitle title="Payment Processing" />
+      <Navbar />
+      <CheckoutPath activePath={2} />
+      <div className="payment-container">
         <Link to='/order/confirm' className='payment-go-back'>Go Back</Link>
         <button className="payment-btn"
-        onClick={()=> completePayment(orderItem.total)}>
+          onClick={() => completePayment(orderItem.total)}>
           Pay ({orderItem.total})/-
         </button>
-    </div>
-    <Footer />
+      </div>
+      <Footer />
     </>
   )
 }

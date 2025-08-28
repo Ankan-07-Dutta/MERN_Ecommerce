@@ -21,10 +21,8 @@ const ProductDetails = () => {
         }
 
         const {loading, error, product, reviewSuccess, reviewLoading} = useSelector( (state)=> state.product );
-        console.log(product);
         
         const {loading:cartLoading, error: cartError,success, message, cartItems} = useSelector( (state)=> state.cart );
-        console.log(cartItems);
         
         const dispatch = useDispatch();
         const {id} = useParams();

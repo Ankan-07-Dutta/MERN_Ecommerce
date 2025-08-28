@@ -12,7 +12,6 @@ import { toast } from 'react-toastify'
 const OrderDetails = () => {
     const { orderId } = useParams();
     const { order, error, loading } = useSelector(state => state.order);
-    console.log(order);
     
 
 

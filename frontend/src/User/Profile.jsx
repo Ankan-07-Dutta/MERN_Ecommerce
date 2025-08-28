@@ -8,7 +8,6 @@ import Navbar from '../components/Navbar';
 
 const Profile = () => {
     const {loading, isAuthenticated, user} = useSelector(state => state.user);
-    console.log(user);
     const navigate = useNavigate();
     useEffect(()=> {
         if(isAuthenticated === false){

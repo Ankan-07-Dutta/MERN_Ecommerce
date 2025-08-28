@@ -24,7 +24,6 @@ const Pagination = ({
         for(let i=Math.max(1, currentPage-pageWindow);i<=Math.min(totalPages, currentPage+pageWindow) ; i++){
             pageNumbers.push(i);
         }
-        console.log(`number of pages ${pageNumbers}`);
         
         return pageNumbers;
     }

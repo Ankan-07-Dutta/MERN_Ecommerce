@@ -12,7 +12,6 @@ import { toast } from 'react-toastify';
 
 const OrdersList = () => {
     const {orders,loading,error, success, message } = useSelector(state => state.admin);
-    console.log(orders);
     
     const dispatch = useDispatch();
 

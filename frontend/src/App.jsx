@@ -41,7 +41,6 @@ const App = () => {
     }
     
   },[dispatch]);
-  //console.log(isAuthenticated, user);
   
   return (
     <Router>

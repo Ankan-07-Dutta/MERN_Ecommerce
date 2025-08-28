@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom'
 
 const Shipping = () => {
     const {shippingInfo} = useSelector(state => state.cart);
-    console.log(shippingInfo);
     
     
     const dispatch = useDispatch();

@@ -23,7 +23,6 @@ const UpdateProduct = () => {
     const {product} = useSelector(state => state.product);
     const {success, error, loading} = useSelector(state => state.admin);
     const {updateId} = useParams();
-    console.log(product);
     
 
     const categories = ["mobile", "fruits", "laptop", "shirt",

@@ -23,7 +23,8 @@ const UpdateRole = () => {
 
     useEffect(()=> {
         dispatch(getSingleUser(userId))
-    },[dispatch])
+    },[dispatch]);
+    
     const { name, email, role } = formData;
 
     useEffect(() => {

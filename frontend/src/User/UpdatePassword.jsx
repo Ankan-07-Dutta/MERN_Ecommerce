@@ -19,12 +19,10 @@ const UpdatePassword = () => {
     const updatePasswordSubmit=(e)=>{
         e.preventDefault();
         const myForm = new FormData();
-        myForm.set("oldPassword", oldPassword)
-        myForm.set("newPassword", newPassword)
-        myForm.set("confirmPassword", confirmPassword)
-        for(let pair of myForm.entries()){
-            console.log(pair[0]+ '-'+ pair[1]);
-        }
+        myForm.set("oldPassword", oldPassword);
+        myForm.set("newPassword", newPassword);
+        myForm.set("confirmPassword", confirmPassword);
+       
         dispatch(updatePassword(myForm));
     }
 

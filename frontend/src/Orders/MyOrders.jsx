@@ -11,8 +11,7 @@ import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
 
 const MyOrders = () => {
-    const {orders, loading, error} = useSelector(state => state.order)
-    console.log(orders);
+    const {orders, loading, error} = useSelector(state => state.order);
     
     const dispatch = useDispatch();
     useEffect(()=> {
