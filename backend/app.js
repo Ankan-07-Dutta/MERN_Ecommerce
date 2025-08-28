@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({path:'./config/config.env'})
+
 import express from 'express';
 import product from './routes/productRoutes.js';
 import user from './routes/userRoutes.js';
@@ -8,6 +8,12 @@ import payment from './routes/paymentRoutes.js';
 import errorHandleMiddleware from './middleware/error.js';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 const app = express();
@@ -24,6 +30,16 @@ app.use("/api/v1", user);
 app.use("/api/v1", order);
 app.use("/api/v1", payment);
 
+//Server static files
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+app.get(/.*/, (_,res)=> {
+    res.sendFile(path.resolve(__dirname,'../frontend/dist/index.html'))
+})
+
 app.use(errorHandleMiddleware);
+
+if(process.env.NODE_ENV !== 'PRODUCTION'){
+    dotenv.config({path:'./config/config.env'})
+}
 
 export default app;
