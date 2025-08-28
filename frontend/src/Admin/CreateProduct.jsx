@@ -53,7 +53,11 @@ const CreateProduct = () => {
             }
 
             reader.readAsDataURL(file)
-        })
+        });
+
+        // Clear input using ref
+        //fileInputRef.current.value = "";
+        e.target.value= "";
         
     }
 
